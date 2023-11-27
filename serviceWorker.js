@@ -37,7 +37,7 @@ self.addEventListener("install", (e) => {
   });*/
 
   self.addEventListener("fetch", (e) => {
-    if(e.request.url.startWith("http")){return;}
+    if(e.request.url.startsWith("http")){return;}
     e.respondWith(
         fetch(e.request)
         .then(async (r) =>{
