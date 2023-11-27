@@ -1,7 +1,7 @@
 const cacheName="ginkobus-pwa-v1";
 const contentToCache =[
     "icons/icon-192.png",
-    "icons/icon_512.png",
+    "icons/icon-512.png",
     "icons/maskable_icon.png",
     "app.js",
     "index.html",
@@ -18,8 +18,8 @@ self.addEventListener("install", (e) => {
       })(),
     );
   });
-  
-  self.addEventListener("fetch", (e) => {
+
+  /*self.addEventListener("fetch", (e) => {
     e.respondWith(
       (async () => {
         const r = await caches.match(e.request);
@@ -34,6 +34,23 @@ self.addEventListener("install", (e) => {
         return response;
       })(),
     );
-  });
-  
+  });*/
+
+  self.addEventListener("fetch", (e) => {
+    if(e.request.url.startWith("http")){return;}
+    e.respondWith(
+        fetch(e.request)
+        .then(async (r) =>{
+            const cache= await caches.open(cacheName);
+            console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
+            cache.put(e.request, response.clone());
+            return r;
+
+  })
+  .catch(function(){
+    return caches.match(e.request);
+
+  }),
+    );
+})
   
